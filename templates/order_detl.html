@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<style type="text/css">
+	.table{
+		border-collapse : "collapse"
+	}
+	th {
+		background-color : "lightgray"
+	}
+</style>
+</head>
+<body>		
+	<h1><a href="/">Prin Tech</a></h1>
+	<ol>
+		<li><a href="/ord_make">생산입력</a></li>
+		<li><a href="/ord_mnge">생산관리</a></li>
+		<li><a href="/ord_plan">생산계획</a></li>
+	</ol>
+		
+	
+	<form action="/ord_mnge_upd/" method="POST">
+		<p>
+			<strong>PartNo:</strong>
+			{{list[0][0]}}
+		</p>
+		<p>
+			<strong>품명:</strong>
+			{{list[0][1]}}
+		</p>
+		<p>
+			<strong>주문일자:</strong>
+			{{list[0][2]}}
+		</p>
+		<p>
+			<strong>배송일자:</strong>
+			{{list[0][3]}}
+		</p>
+		<p>
+			<strong>변경일자</strong>
+			<input type="text" name="delv_chng_date" value={{list[0][4]}}>
+		</p>
+		<p>
+			<input type="submit" value="수정">
+		</p>
+		<p>
+			<input type="hidden" name="seq" value={{list[0][5]}}>
+		</p>
+	</form>
+</body>
+</html>

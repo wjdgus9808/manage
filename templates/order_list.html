@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<style type="text/css">
+	table {
+    width: 100%;
+    border: 1px solid #444444;
+    border-collapse: collapse;
+  	}
+	th, td {
+		border: 1px solid #444444;
+	}
+</style>
+</head>
+<body>		
+	<h1><a href="/">Prin Tech</a></h1>
+	<ol>
+		<li><a href="/ord_make">생산입력</a></li>
+		<li><a href="/ord_mnge">생산관리</a></li>
+		<li><a href="/ord_plan">생산계획</a></li>
+	</ol>
+	
+	<form action="/ord_mnge_list/" method="POST">
+		<p>
+			<select name="gubn">				
+				<option value="A" >입력일자</option>
+				<option value="B">배송일자</option>										
+			</select>			
+			<input type="text" name="fr_date" value={{p_fr_date}} />
+			<input type="text" name="to_date" value={{p_to_date}} />
+			<input type="submit" value="조회"/>
+		</p>
+	</form>
+	<table>
+		<tr>			
+			<th>PartNo</th>
+			<th>품명</th>
+			<th>생산번호</th>
+			<th>주문일자</th>
+			<th>배달일자</th>
+			<th>변경일자</th>
+			<th>입력일자</th>
+		</tr>
+		{% for item in list %}
+		<tr>			
+			<td><a href="/ord_mnge_detl/{{item[0]}}">{{ item[1] }} </a></td>
+			<td>{{ item[2] }}</td>	
+			<td>{{ item[3] }}</td>	
+			<td>{{ item[4] }}</td>
+			<td>{{ item[5] }}</td>
+			<td>{{ item[6] }}</td>
+			<td>{{ item[7] }}</td>
+		</tr>
+		{% endfor %}
+	</table>
+</body>
+</html>

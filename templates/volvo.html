@@ -1,0 +1,35 @@
+<!doctype html>
+<h1><a href="/">Prin Tech</a></h1>
+<ol>
+    <li><a href="/ord_make">생산입력</a></li>
+    <li><a href="/ord_mnge">생산관리</a></li>
+    <li><a href="/ord_plan">생산계획</a></li>
+</ol>
+<div>
+    <form style="display:inline-block; margin-right:30px;" method=post action="/ord_upload" enctype=multipart/form-data>
+        <p>
+            <input type=file name=file>
+            <input type=submit value=Upload>
+        </p>
+    </form>
+    <form style="display:inline-block;" action="/ord_make_list" method="POST">
+        <p>
+            <input type="date" name="order_date"  value={{order_date}}>
+            <input type="submit" value="조회"/>
+        </p>
+    </form>
+</div>
+
+
+<table border = '' class = "table">	
+    {% for item in list %}
+    <tr>
+        {% for i in item %}
+        <td>           
+            <option>{{i}}</option>
+            <!-- <input type="text" value={{i}}> -->
+        </td>
+        {% endfor %}
+    </tr>
+    {% endfor %}
+</table>
