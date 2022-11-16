@@ -1,7 +1,7 @@
 from flask import Flask, request,render_template
 from datetime import datetime
 from order import getOrderList, getOrder, setOrder
-from volvo import getvList
+from volvo import getvList,upload,make_order,getVorderList
 import pymysql
 import pandas as pd
 import numpy as np
@@ -11,15 +11,16 @@ app = Flask(__name__)
 def template(content,list=None):
     return f'''<!doctype html>
     <html>
-        <body>
+        <link rel="stylesheet" href="./static/css/style.css">
+        <div class="navbar">
             <h1><a href="/">Prin Tech</a></h1>
-            <ol>
+            <ul class="nav_menu">
                 <li><a href="/ord_make">생산입력</a></li>
                 <li><a href="/ord_mnge">생산관리</a></li>
                 <li><a href="/ord_plan">생산계획</a></li>
-            </ol>
-            {content} 
-        </body>
+            </ul>
+        </div>
+        {content}
     </html>
     '''
  
@@ -34,7 +35,7 @@ def ord_make():
     <h2>생산입력</h2>
     <form action="/ord_make_list" method="POST">
             <p>
-                <input type="date" name="order_date"/>
+                <input type="date" name="po_date"/>
                 <input type="submit" value="조회"/>
             </p>
         </form>  
@@ -44,40 +45,36 @@ def ord_make():
 
 @app.route('/ord_make_list',methods=['POST'])
 def ord_make_list():
-    list = getvList(request.form["order_date"].replace('-',''))
-    # print(list[0][8])
-    return render_template('volvo.html',list=list,order_date=request.form["order_date"])
+    po_date = request.form["po_date"].replace('-','')
+    print(po_date)
+    vlist = getvList(request.form["po_date"].replace('-',''))
+    vordlist = getVorderList(request.form["po_date"].replace('-',''))
+    return render_template('volvo.html',vlist=vlist,vordlist=vordlist,po_date=po_date)
 
-@app.route('/ord_upload', methods=["POST"])
-def ord_upload():
-    if request.method == 'POST':
-        gil_db = pymysql.connect(
-        user='admin', 
-        passwd='789456123', 
-        host='database-1.cozswa2vem5d.ap-northeast-2.rds.amazonaws.com', 
-        db='prin_tech', 
-        charset='utf8'
-        )
-        cursor = gil_db.cursor()
+@app.route('/ord_upload/<po_date>', methods=["POST"])
+def ord_upload(po_date):
+    if request.method == 'POST': 
         print(request.files['file'])
         f = request.files['file']
         data = pd.read_excel(f)
         data = data.replace({np.nan:None})
         for idx in range(len(data)):
-            data['f_id'] = "test"
-            
-            data['l_id'] = "test"
-            
+            data['f_id'] = "test"    
+            data['l_id'] = "test"   
             data['prsc_yn'] = 'N'
-            data['po_date'] = data['Order date']         
-        sql_insert = 'INSERT INTO prin_tech.volvo(po_number,item,material_no,print_qty,material_desc,plant,sloc,net_price,order_date,order_qty,delivery_date,rcvd_qty,qc,location,f_id,l_id,proc_yn,po_date) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)'
-        for idx in range(len(data)):
-            cursor.execute(sql_insert,tuple(data.values[idx]))
-        gil_db.commit()
-        gil_db.close()
-        print(data.loc[0]['Order date'])
-        list = getvList(data.loc[0]['Order date'])    
-        return render_template('volvo.html',list=list,order_date=data.loc[0]['Order date'])
+            data['po_date'] = po_date
+            # data['po_date'] = data['Order date']         
+        # print(data.loc[0]['Order date'])
+        upload(po_date,data)
+        
+        vlist = getvList(po_date)   
+        make_order(po_date,"yyyy") 
+        vordlist = getVorderList(request.form["po_date"].replace('-',''))
+        return render_template('volvo.html',vlist=vlist,vordlist=vordlist,po_date=po_date)
+
+
+
+
 
 g_gubn = ''
 g_fr_date = ''
@@ -86,7 +83,7 @@ g_to_date = ''
 def ord_mnge():
     global g_gubn,g_fr_date,g_to_date    
     if( g_gubn == ''):
-        g_gubn = 'A'
+        g_gubn = '주문일자'
     if( g_fr_date == ''):
         g_fr_date = datetime.today().strftime('%Y%m%d')    
     if( g_to_date == ''):
@@ -97,8 +94,8 @@ def ord_mnge():
 
 @app.route('/ord_mnge_list/', methods=['POST'])
 def ord_mnge_list():  
-    global g_gubn,g_fr_date,g_to_date    
-    g_gubn = request.form["gubn"]
+    global g_gubn,g_fr_date,g_to_date       
+    g_gubn = request.form.get('gubn', False) 
     g_fr_date = request.form["fr_date"]
     g_to_date = request.form["to_date"]  
     list = getOrderList(g_gubn, g_fr_date,g_to_date)
@@ -125,9 +122,12 @@ def ord_mnge_upd():
 
 
 
+
+
 @app.route('/ord_plan')
 def ord_plan():
     return template('<h2>생산계획</h2>')
+    
 
 
 

@@ -3,57 +3,63 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
-<style type="text/css">
-	table {
-    width: 100%;
-    border: 1px solid #444444;
-    border-collapse: collapse;
-  	}
-	th, td {
-		border: 1px solid #444444;
+<script>
+	function myFunction() {
+	  var x = document.getElementById("mySelect").value;
+	  document.getElementById("gubn").value = x;
 	}
-</style>
+</script>
+<link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
 </head>
 <body>		
-	<h1><a href="/">Prin Tech</a></h1>
-	<ol>
-		<li><a href="/ord_make">생산입력</a></li>
-		<li><a href="/ord_mnge">생산관리</a></li>
-		<li><a href="/ord_plan">생산계획</a></li>
-	</ol>
+	<div class="navbar">
+		<h1><a href="/">Prin Tech</a></h1>
+		<ul class="nav_menu">
+			<li><a href="/ord_make">생산입력</a></li>
+			<li><a href="/ord_mnge">생산관리</a></li>
+			<li><a href="/ord_plan">생산계획</a></li>
+		</ul>
+	</div>
 	
 	<form action="/ord_mnge_list/" method="POST">
 		<p>
-			<select name="gubn">				
-				<option value="A" >입력일자</option>
-				<option value="B">배송일자</option>										
-			</select>			
-			<input type="text" name="fr_date" value={{p_fr_date}} />
-			<input type="text" name="to_date" value={{p_to_date}} />
+			<select id="mySelect" onchange="myFunction()">
+				<option value="">선택</option>
+				<option value="주문일자">주문일자</option>
+				<option value="닙품일자">납품일자</option>
+			</select>	
+			<input type="text" name="gubn" id="gubn" value={{p_gubn}}  size="6"/>		
+			<input type="text" name="fr_date" value={{p_fr_date}} size="6"/>			~
+			<input type="text" name="to_date" value={{p_to_date}} size="6"/>
 			<input type="submit" value="조회"/>
 		</p>
 	</form>
-	<table>
-		<tr>			
-			<th>PartNo</th>
-			<th>품명</th>
-			<th>생산번호</th>
-			<th>주문일자</th>
-			<th>배달일자</th>
-			<th>변경일자</th>
-			<th>입력일자</th>
-		</tr>
-		{% for item in list %}
-		<tr>			
-			<td><a href="/ord_mnge_detl/{{item[0]}}">{{ item[1] }} </a></td>
-			<td>{{ item[2] }}</td>	
-			<td>{{ item[3] }}</td>	
-			<td>{{ item[4] }}</td>
-			<td>{{ item[5] }}</td>
-			<td>{{ item[6] }}</td>
-			<td>{{ item[7] }}</td>
-		</tr>
-		{% endfor %}
+	<table class="styled-table">
+		<thead>
+			<tr>			
+				<th>PartNo</th>
+				<th>품명</th>
+				<th>생산번호</th>
+				<th>주문일자</th>
+				<th>배달일자</th>
+				<th>변경일자</th>
+				<th>입력일자</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for item in list %}
+			<tr>			
+				<td><a href="/ord_mnge_detl/{{item[0]}}">{{ item[1] }} </a></td>
+				<td>{{ item[2] }}</td>	
+				<td>{{ item[3] }}</td>	
+				<td>{{ item[4] }}</td>
+				<td>{{ item[5] }}</td>
+				<td>{{ item[6] }}</td>
+				<td>{{ item[7] }}</td>
+			</tr>
+			{% endfor %}
+		</tbody>	
+		
 	</table>
 </body>
 </html>

@@ -37,7 +37,7 @@ def getOrderList(gubn, fr_date,to_date):
                 a.net_price                                        
             FROM vorder a
             left outer join prdc_mst b on b.part_no = a.part_no
-            WHERE case when '{gubn}' = 'A' then a.po_date else ifnull(a.delv_chng_date,a.delv_date) end between '{fr_date}' and '{to_date}'
+            WHERE case when '{gubn}' = '주문일자' then a.po_date else ifnull(a.delv_chng_date,a.delv_date) end between '{fr_date}' and '{to_date}'
             """
 
     print(sql)            

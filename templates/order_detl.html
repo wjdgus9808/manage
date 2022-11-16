@@ -3,22 +3,17 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
-<style type="text/css">
-	.table{
-		border-collapse : "collapse"
-	}
-	th {
-		background-color : "lightgray"
-	}
-</style>
+<link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
 </head>
 <body>		
-	<h1><a href="/">Prin Tech</a></h1>
-	<ol>
-		<li><a href="/ord_make">생산입력</a></li>
-		<li><a href="/ord_mnge">생산관리</a></li>
-		<li><a href="/ord_plan">생산계획</a></li>
-	</ol>
+	<div class="navbar">
+		<h1><a href="/">Prin Tech</a></h1>
+		<ul class="nav_menu">
+			<li><a href="/ord_make">생산입력</a></li>
+			<li><a href="/ord_mnge">생산관리</a></li>
+			<li><a href="/ord_plan">생산계획</a></li>
+		</ul>
+	</div>
 		
 	
 	<form action="/ord_mnge_upd/" method="POST">

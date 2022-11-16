@@ -1,12 +1,18 @@
 <!doctype html>
-<h1><a href="/">Prin Tech</a></h1>
-<ol>
-    <li><a href="/ord_make">생산입력</a></li>
-    <li><a href="/ord_mnge">생산관리</a></li>
-    <li><a href="/ord_plan">생산계획</a></li>
-</ol>
+<link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+
+<div class="navbar">
+    <h1><a href="/">Prin Tech</a></h1>
+    <ul class="nav_menu">
+        <li><a href="/ord_make">생산입력</a></li>
+        <li><a href="/ord_mnge">생산관리</a></li>
+        <li><a href="/ord_plan">생산계획</a></li>
+    </ul>
+</div>
+
+
 <div>
-    <form style="display:inline-block; margin-right:30px;" method=post action="/ord_upload" enctype=multipart/form-data>
+    <form style="display:inline-block; margin-right:30px;" method=post action="/ord_upload/{{po_date}}" enctype=multipart/form-data>
         <p>
             <input type=file name=file>
             <input type=submit value=Upload>
@@ -14,22 +20,78 @@
     </form>
     <form style="display:inline-block;" action="/ord_make_list" method="POST">
         <p>
-            <input type="date" name="order_date"  value={{order_date}}>
+            <input type="date" name="po_date"  value={{po_date}}>
             <input type="submit" value="조회"/>
         </p>
     </form>
 </div>
 
-
-<table border = '' class = "table">	
-    {% for item in list %}
-    <tr>
-        {% for i in item %}
-        <td>           
-            <option>{{i}}</option>
-            <!-- <input type="text" value={{i}}> -->
-        </td>
+<h3>Volvo</h3>
+<table border = '' class = "styled-table">	
+    <thead>
+        <tr>
+            <th>PO num</th>
+            <th>Item</th>
+            <th>Material no</th>
+            <th>발주잔량</th>
+            <th>Material Desc</th>
+            <th>Plant</th>
+            <th>Sloc</th>
+            <th>Net price</th>
+            <th>Order date</th>
+            <th>Order Qty</th>
+            <th>Delivery date</th>
+            <th>입고수량</th>
+            <th>QC</th>
+            <th>Location</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in vlist %}
+        <tr>
+            {% for i in item %}
+            <td>           
+                <option>{{i}}</option>
+                <!-- <input type="text" value={{i}}> -->
+            </td>
+            {% endfor %}
+        </tr>
         {% endfor %}
-    </tr>
-    {% endfor %}
+    </tbody>
+    
+</table>
+
+<h3>작업지시</h3>
+<table border = '' class = "styled-table">	
+    <thead>
+        <tr>
+            <th>제품번호</th>
+            <th>품명</th>
+            <th>주문일자</th>
+            <th>종류</th>
+            <th>규격</th>
+            <th>수량</th>
+            <th>지질</th>
+            <th>인쇄</th>
+            <th>작지번호</th>
+            <th>납품요구일</th>
+            <th>단가</th>
+            <th>총금액</th>
+            <th>PAGE</th>
+            <th>납품변경일</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in vordlist %}
+        <tr>
+            {% for i in item %}
+            <td>           
+                <option>{{i}}</option>
+                <!-- <input type="text" value={{i}}> -->
+            </td>
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </tbody>
+    
 </table>
